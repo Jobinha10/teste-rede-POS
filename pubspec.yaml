@@ -1,0 +1,55 @@
+name: wishes
+description: A new Flutter project.
+
+
+publish_to: 'none' 
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # USADO PARA OS ICONES DO STYLE IOS
+  cupertino_icons: ^1.0.2
+  # CONTEM UMA SÉRIE DE INPUTFORMATS PARA O FLUTTER JÁ EM PT-BR.
+  brasil_fields: ^1.4.2
+  # USADO PARA FAZER ALGUMAS VALIDAÇÕES AUTOMATICAS NO APP NO APP
+  validatorless: ^1.2.1
+  # USADO PARA NOTIFICAR O USUARIO SOBRE SUAS AÇÕES NO APP
+  fluttertoast: ^8.0.9
+  # USADO PARA PARA CRIAR ALERTS PERSONALIZADOS E MAIS ESTILIZADOS NO APP
+  rflutter_alert: ^2.0.4
+  # CRIA UMA ANIMAÇÃO NO ICONE DE MENU PARA FINS ESTETICOS
+  flutter_speed_dial: ^4.4.0
+  # USADO PARA RODAR UMA URL em um navegador externo
+  url_launcher: ^6.1.5
+  # USADO PARA FORMATAR DATAS
+  intl: ^0.17.0
+  # CRIAR UMA SPLASH SCREEN ANIMADA
+  animated_splash_screen: ^1.3.0
+  # USADO PARA FAZER REQUISIÇÕES A APIS
+  http: ^0.13.4
+  # USADO PORA MANTER DADOS EM CACHE
+  shared_preferences: ^2.0.15
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/logo/
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+ 
