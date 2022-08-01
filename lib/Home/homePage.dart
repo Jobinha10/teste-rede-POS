@@ -647,7 +647,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 backgroundColor: AppTheme.roxoApp,
                 radius: 50,
                 child: Text(
-                  session.usuarioLogado.nome.substring(0, 1),
+                  session.usuarioLogado.nome ==  ""?"W": session.usuarioLogado.nome.substring(0, 1),
                   style: AppTheme.styleTitulos,
                 ),
               ),

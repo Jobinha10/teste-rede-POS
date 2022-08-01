@@ -12,6 +12,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+ # Usado para avisar deixar o app em pt_br
+  flutter_localizations:
+    sdk: flutter    
   # USADO PARA OS ICONES DO STYLE IOS
   cupertino_icons: ^1.0.2
   # CONTEM UMA SÉRIE DE INPUTFORMATS PARA O FLUTTER JÁ EM PT-BR.
