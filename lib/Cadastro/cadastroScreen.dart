@@ -88,6 +88,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
           size(h: 3),
           txfNomeCompleto.txfPadrao(
             "Nome completo",
+            testMask: "nome",
             isFocused: _isFocused[0],
             keyboardType: TextInputType.name,
             onTap: () {
@@ -97,6 +98,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
                 _isFocused[2] = false;
               });
             },
+            
           ),
         ],
       ),
@@ -111,6 +113,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
           size(h: 3),
           txfEmail.txfPadrao(
             "E-mail",
+            testMask: "email",
             keyboardType: TextInputType.emailAddress,
             isFocused: _isFocused[1],
             onTap: () {
@@ -133,6 +136,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
           size(h: 3),
           txfSenha.txfPadrao(
             "Senha",
+            testMask: "",
             keyboardType: TextInputType.visiblePassword,
             isFocused: _isFocused[2],
             onTap: () {

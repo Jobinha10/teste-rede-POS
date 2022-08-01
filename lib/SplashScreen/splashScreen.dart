@@ -16,45 +16,29 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    Future.delayed(Duration(milliseconds: 2500), () {
+    Future.delayed(Duration(milliseconds: 2700), () {
       _abrirTela();
     });
     super.initState();
   }
 
   _abrirTela() async {
-    bool logado = false;
     var prefs = await SharedPreferences.getInstance();
 
     //COLOCA NA MINHA LIBRARY SESSION OS DADOS NECESSARIOS PARA A SESSAO DO USUARIO
     //PEGA OS DADOS GRAVADOS ANTERIORMENTE NO CACHE DO APK
     try {
-      logado = prefs.getBool("loginRealizado")!;
-      session.usuarioLogado.email = prefs.getString("email")!;
       session.usuarioLogado.nome = prefs.getString("nome")!;
-      session.usuarioLogado.jwtToken = prefs.getString("tokenJwt")!;
     } catch (e) {
-      logado = false;
-      session.usuarioLogado.email = "";
       session.usuarioLogado.nome = "";
-      session.usuarioLogado.jwtToken = "";
     }
 
-    if (logado) {
-      return Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomeScreen(),
-        ),
-      );
-    } else {
-      return Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => LoginScreen(),
-        ),
-      );
-    }
+    return Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginScreen(),
+      ),
+    );
   }
 
   @override
@@ -72,9 +56,8 @@ class _SplashScreenState extends State<SplashScreen> {
             nextScreen: HomeScreen(),
             disableNavigation: true,
             splashIconSize: 86.06,
-            duration: 1500,
-            animationDuration: Duration(seconds: 1),
-            splashTransition: SplashTransition.fadeTransition,
+            duration: 2500,
+            splashTransition: SplashTransition.rotationTransition,
           ),
         ),
       ],

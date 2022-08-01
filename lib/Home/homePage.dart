@@ -27,40 +27,130 @@ class _HomeScreenState extends State<HomeScreen> {
   int _lengthLista = 0;
   bool _confimedDismiss = false;
   List<ProdutosDesejadosJSON> listaItensDesejados = [
-    ProdutosDesejadosJSON(
-      nomeProduto: "Alexa",
-      descricao: "A da 4 geração",
-      mediaValor: "400,00",
-      data: "31/08/2022",
-      linkProduto: "https://www.google.com/",
-    ),
-    ProdutosDesejadosJSON(
-      nomeProduto: "Flange relax cadeira gamer",
-      descricao: "Tem que ser de 27 cm altura e base 30 cm ",
-      mediaValor: "150,00",
-      data: "31/08/2022",
-      linkProduto: "https://www.google.com/",
-    ),
-    ProdutosDesejadosJSON(
-      nomeProduto: "Pulseira de prata",
-      descricao: "Tem que ser grossa viu",
-      mediaValor: "600,00",
-      data: "31/08/2022",
-      linkProduto: "https://www.google.com/",
-    ),
+    // ProdutosDesejadosJSON(
+    //   nomeProduto: "Alexa",
+    //   descricao: "A da 4 geração",
+    //   mediaValor: "400,00",
+    //   data: "31/08/2022",
+    //   linkProduto: "https://www.google.com/",
+    // ),
+    // ProdutosDesejadosJSON(
+    //   nomeProduto: "Flange relax cadeira gamer",
+    //   descricao: "Tem que ser de 27 cm altura e base 30 cm ",
+    //   mediaValor: "150,00",
+    //   data: "31/08/2022",
+    //   linkProduto: "https://www.google.com/",
+    // ),
+    // ProdutosDesejadosJSON(
+    //   nomeProduto: "Pulseira de prata",
+    //   descricao: "Tem que ser grossa viu",
+    //   mediaValor: "600,00",
+    //   data: "31/08/2022",
+    //   linkProduto: "https://www.google.com/",
+    // ),
   ];
   List<ProdutosDesejadosJSON> listaItensFiltrada = [];
 
   @override
   void initState() {
-    listaItensFiltrada = listaItensDesejados;
-    _lengthLista = listaItensDesejados.length;
-    // HomeScreenAPI().getValue("quantidadeItens").then((value) {
-    //   setState(() {
-    //     quantidadeItens = ClassUtil().stgToInt(value);
-    //   });
-    // });
+    HomeScreenAPI().getValue("quantidadeItens").then((value) {
+      setState(() {
+        quantidadeItens = ClassUtil().stgToInt(value);
+      });
+    });
+    _listarItens();
     super.initState();
+  }
+
+  _listarItens() {
+    HomeScreenAPI().getAllItens().then((lista) {
+      setState(() {
+        listaItensDesejados = lista;
+        listaItensFiltrada = lista;
+        _lengthLista = listaItensDesejados.length;
+      });
+    });
+  }
+
+  alterarValues(
+    int index, {
+    required String nomeProduto,
+    required String descricaoProduto,
+    required String mediaValorProduto,
+    required String linkProduto,
+  }) async {
+    String id = listaItensDesejados[index].numeroProduto.toString();
+    //CRIO O VALOR DO NOME DO PRODUTO
+    String nomeProdutoChave = "nomeProduto" + id;
+    await HomeScreenAPI().setValue(nomeProdutoChave, nomeProduto);
+    // CRIO O VALOR DA DESC DO PRODUTO
+    String descProdutoChave = "descricaoProduto" + id;
+    await HomeScreenAPI().setValue(descProdutoChave, descricaoProduto);
+    //  CRIO O VALOR DA MEDIA DE VALOR DO PRODUTO
+    String valorMedioProdutoChave = "mediaValorProduto" + id;
+    await HomeScreenAPI().setValue(valorMedioProdutoChave, mediaValorProduto);
+    //  CRIO O VALOR DA MEDIA DE VALOR DO PRODUTO`
+    String dataProdutoChave = "dataProduto" + id;
+    await HomeScreenAPI().setValue(
+        dataProdutoChave, ClassUtil().formatarData(DateTime.now().toString()));
+    //  CRIO O VALOR PARA O LINK DO PRODUTO
+    String linkProdutoChave = "linkProduto" + id;
+    await HomeScreenAPI().setValue(linkProdutoChave, linkProduto);
+  }
+
+  setvalues({
+    required String nomeProduto,
+    required String descricaoProduto,
+    required String mediaValorProduto,
+    required String linkProduto,
+  }) async {
+    quantidadeItens = quantidadeItens + 1;
+    //ATUALIZA A QUANTIDADE DE ITENS
+    await HomeScreenAPI()
+        .setValue("quantidadeItens", quantidadeItens.toString());
+    //CRIO O VALOR DO NOME DO PRODUTO
+    String nomeProdutoChave = "nomeProduto" + quantidadeItens.toString();
+    await HomeScreenAPI().setValue(nomeProdutoChave, nomeProduto);
+    // CRIO O VALOR DA DESC DO PRODUTO
+    String descProdutoChave = "descricaoProduto" + quantidadeItens.toString();
+    await HomeScreenAPI().setValue(descProdutoChave, descricaoProduto);
+    //  CRIO O VALOR DA MEDIA DE VALOR DO PRODUTO
+    String valorMedioProdutoChave =
+        "mediaValorProduto" + quantidadeItens.toString();
+    await HomeScreenAPI().setValue(valorMedioProdutoChave, mediaValorProduto);
+    //  CRIO O VALOR DA MEDIA DE VALOR DO PRODUTO`
+    String dataProdutoChave = "dataProduto" + quantidadeItens.toString();
+    await HomeScreenAPI().setValue(
+        dataProdutoChave, ClassUtil().formatarData(DateTime.now().toString()));
+    //  CRIO O VALOR PARA O LINK DO PRODUTO
+    String linkProdutoChave = "linkProduto" + quantidadeItens.toString();
+    await HomeScreenAPI().setValue(linkProdutoChave, linkProduto);
+  }
+
+  removeValues(int index) async {
+    //PEGA O ID
+    String id = listaItensDesejados[index].numeroProduto.toString();
+    //ATUALIZA A QUANTIDADE DE ITENS QUE O USUARIO DESEJA
+    quantidadeItens = quantidadeItens - 1;
+    //ATUALIZA A QUANTIDADE DE ITENS
+    await HomeScreenAPI()
+        .setValue("quantidadeItens", quantidadeItens.toString());
+    //DELETA O ITEM SELECIONADO
+    //CRIO O VALOR DO NOME DO PRODUTO
+    String nomeProdutoChave = "nomeProduto" + id;
+    await HomeScreenAPI().deleteValue(nomeProdutoChave);
+    // CRIO O VALOR DA DESC DO PRODUTO
+    String descProdutoChave = "descricaoProduto" + id;
+    await HomeScreenAPI().deleteValue(descProdutoChave);
+    //  CRIO O VALOR DA MEDIA DE VALOR DO PRODUTO
+    String valorMedioProdutoChave = "mediaValorProduto" + id;
+    await HomeScreenAPI().deleteValue(valorMedioProdutoChave);
+    //  CRIO O VALOR DA MEDIA DE VALOR DO PRODUTO`
+    String dataProdutoChave = "dataProduto" + id;
+    await HomeScreenAPI().deleteValue(dataProdutoChave);
+    //  CRIO O VALOR PARA O LINK DO PRODUTO
+    String linkProdutoChave = "linkProduto" + id;
+    await HomeScreenAPI().deleteValue(linkProdutoChave);
   }
 
   Future<bool> removerItem(int index) async {
@@ -78,7 +168,9 @@ class _HomeScreenState extends State<HomeScreen> {
             style: AppTheme.stylePadraoBranco,
           )),
           color: AppTheme.roxoApp,
-          onPressed: () {
+          onPressed: () async {
+            await removeValues(index);
+            ToastOrAlert.toastPadrao("Item removido com sucesso");
             Navigator.pop(context, true);
             setState(() {
               listaItensDesejados.removeAt(index);
@@ -146,6 +238,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           txfNomeProduto.txfPadrao(
             "Nome",
+            testMask: "nome",
             keyboardType: TextInputType.name,
             isFocused: isFocused[0],
             onTap: () {
@@ -159,6 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(height: 10),
           txfDescProduto.txfPadrao(
             "Descrição do produto",
+            testMask: "nome",
             keyboardType: TextInputType.name,
             isFocused: isFocused[1],
             maxLines: 3,
@@ -174,6 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(height: 10),
           txfValorMedioProduto.txfPadrao(
             "Média de valor",
+            testMask: "cash",
             keyboardType: TextInputType.number,
             isFocused: isFocused[2],
             onTap: () {
@@ -192,6 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: 170,
                 child: txfLinkProduto.txfPadrao(
                   "Link",
+                  testMask: "",
                   keyboardType: TextInputType.url,
                   isFocused: isFocused[3],
                   onTap: () {
@@ -233,7 +329,18 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Center(
             child: Text("Atualizar", style: AppTheme.stylePadraoBranco),
           ),
-          onPressed: () {},
+          onPressed: () async {
+            await alterarValues(
+              index,
+              descricaoProduto: txfDescProduto.getValue(),
+              mediaValorProduto: txfValorMedioProduto.getValue(),
+              nomeProduto: txfNomeProduto.getValue(),
+              linkProduto: txfLinkProduto.getValue(),
+            );
+            Navigator.pop(context);
+            ToastOrAlert.toastPadrao("Item alterado com sucesso.");
+            _listarItens();
+          },
         ),
       ],
       animationType: AnimationType.fromBottom,
@@ -260,6 +367,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(height: 3),
           txfNomeProduto.txfPadrao(
             "Nome",
+            testMask: "nome",
             keyboardType: TextInputType.name,
             isFocused: isFocused[0],
             onTap: () {
@@ -275,6 +383,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(height: 3),
           txfDescProduto.txfPadrao(
             "Descrição do produto",
+            testMask: "nome",
             keyboardType: TextInputType.name,
             isFocused: isFocused[1],
             maxLines: 3,
@@ -292,6 +401,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(height: 3),
           txfValorMedioProduto.txfPadrao(
             "Média de valor",
+            testMask: "cash",
             keyboardType: TextInputType.number,
             isFocused: isFocused[2],
             onTap: () {
@@ -307,6 +417,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(height: 3),
           txfLinkProduto.txfPadrao(
             "Link",
+            testMask: "link",
             keyboardType: TextInputType.url,
             isFocused: isFocused[2],
             onTap: () {
@@ -326,34 +437,16 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Center(
             child: Text("Adicionar", style: AppTheme.stylePadraoBranco),
           ),
-          onPressed: () {
-            quantidadeItens = quantidadeItens + 1;
-            //ATUALIZA A QUANTIDADE DE ITENS
-            HomeScreenAPI()
-                .setValue("quantidadeItens", quantidadeItens.toString());
-            //CRIO O VALOR DO NOME DO PRODUTO
-            String nomeProdutoChave =
-                "nomeProduto" + quantidadeItens.toString();
-            HomeScreenAPI()
-                .setValue(nomeProdutoChave, txfNomeProduto.getValue());
-            // CRIO O VALOR DA DESC DO PRODUTO
-            String descProdutoChave =
-                "descricaoProduto" + quantidadeItens.toString();
-            HomeScreenAPI()
-                .setValue(descProdutoChave, txfDescProduto.getValue());
-            //  CRIO O VALOR DA MEDIA DE VALOR DO PRODUTO
-            String valorMedioProdutoChave =
-                "mediaValorProduto" + quantidadeItens.toString();
-            HomeScreenAPI().setValue(
-                valorMedioProdutoChave, txfValorMedioProduto.getValue());
-            //  CRIO O VALOR PARA O LINK DO PRODUTO
-            String linkProdutoChave =
-                "linkProduto" + quantidadeItens.toString();
-            HomeScreenAPI()
-                .setValue(linkProdutoChave, txfLinkProduto.getValue());
-
+          onPressed: () async {
+            await setvalues(
+              descricaoProduto: txfDescProduto.getValue(),
+              mediaValorProduto: txfValorMedioProduto.getValue(),
+              nomeProduto: txfNomeProduto.getValue(),
+              linkProduto: txfLinkProduto.getValue(),
+            );
             Navigator.pop(context);
             ToastOrAlert.toastPadrao("Item adicionado com sucesso");
+            _listarItens();
           },
         ),
       ],
@@ -474,6 +567,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     final pesquisarItem = txfPesquisarItem.txfPadrao(
       "",
+      testMask: "",
       keyboardType: TextInputType.text,
       isFocused: true,
       onTap: () {},
@@ -553,7 +647,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 backgroundColor: AppTheme.roxoApp,
                 radius: 50,
                 child: Text(
-                  "session.usuarioLogado.nome.substring(0, 1)",
+                  session.usuarioLogado.nome.substring(0, 1),
                   style: AppTheme.styleTitulos,
                 ),
               ),
@@ -570,7 +664,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               size(h: 15),
               Text(
-                "Seus desejados: "+ quantidadeItens.toString(),
+                "Seus desejados: " + quantidadeItens.toString(),
                 style: AppTheme.stylePadraoBranco,
               ),
             ],

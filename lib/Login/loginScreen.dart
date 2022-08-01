@@ -5,7 +5,6 @@ import 'package:wishes/Encapsulados/toastAlert.dart';
 import 'package:wishes/Home/homePage.dart';
 import 'package:wishes/Login/API/loginAPI.dart';
 import 'package:wishes/theme.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wishes/session.dart' as session;
 
 class LoginScreen extends StatefulWidget {
@@ -33,7 +32,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   fazerLogin() async {
     ToastOrAlert.toastPadrao("Bem vindo! ");
-    var prefs = await SharedPreferences.getInstance();
     //validação do form
     bool formOk = _formKey.currentState!.validate();
     if (!formOk) {
@@ -47,16 +45,14 @@ class _LoginScreenState extends State<LoginScreen> {
     if (urlResponse) {
       ToastOrAlert.toastPadrao("Bem vindo!");
       session.usuarioLogado.email = txfLogin.getValue();
-      //SALVA NO CACHE AS VARIAVEIS NECESSARIOS PARA MANTER O USUARIO LOGADO
-      prefs.setBool("loginRealizado", true);
-      prefs.setString("email", session.usuarioLogado.email);
-      prefs.setString("tokenJwt", session.usuarioLogado.jwtToken);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => HomeScreen(),
         ),
       );
+    }else{
+      ToastOrAlert.toastPadrao("E-mail ou senha incorretos.",erro: true);
     }
   }
 
@@ -89,6 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
       padding: EdgeInsets.only(left: 16.0, right: 16.0),
       child: txfLogin.txfBordaPersonalizada(
         "Login",
+        testMask: "email",
         keyboardType: TextInputType.text,
         isFocused: _isFocused[0],
         prefixIcon: AppTheme.userIcon(
@@ -108,6 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
       padding: EdgeInsets.only(left: 16.0, right: 16.0),
       child: txfSenha.txfBordaPersonalizada(
         "Senha",
+        testMask: "obrigatorio",
         keyboardType: TextInputType.text,
         isFocused: _isFocused[1],
         prefixIcon: AppTheme.lockIcon(

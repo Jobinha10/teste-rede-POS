@@ -142,6 +142,6 @@ class ClassWebAPI {
       "token": session.usuarioLogado.jwtToken,
     };
 
-    return await http.post(url, headers: header, body: {});
+    return await http.post(url, headers: header);
   }
 }

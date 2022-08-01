@@ -1,8 +1,10 @@
 // ignore_for_file: invalid_use_of_protected_member
 
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wishes/theme.dart';
+import 'package:validatorless/validatorless.dart';
 
 //**********************************************************
 //!ENCAPSULADO QUE PADRONIZAR O WIDGET TextFormField
@@ -20,6 +22,7 @@ class TxffPadrao {
     required bool isFocused,
     required Function()? onTap,
     required Widget prefixIcon,
+    required String testMask,
     double topLeft = 0,
     double topRight = 0,
     double bottomLeft = 0,
@@ -35,6 +38,8 @@ class TxffPadrao {
       readOnly: readOnly,
       onTap: () => onTap!(),
       autofocus: true,
+      inputFormatters: inputFormatters(testMask),
+      validator: validator(testMask),
       obscureText: useObscureText ? obscureText : false,
       decoration: InputDecoration(
         focusedBorder: _outlineInputBorderPerson(
@@ -72,6 +77,7 @@ class TxffPadrao {
     required TextInputType keyboardType,
     required bool isFocused,
     required Function()? onTap,
+    required String testMask,
     int maxLines = 1,
     MaxLengthEnforcement maxLengthEnforcement = MaxLengthEnforcement.none,
     bool isSearch = false,
@@ -83,6 +89,8 @@ class TxffPadrao {
       keyboardType: keyboardType,
       readOnly: readOnly,
       onTap: () => onTap!(),
+      inputFormatters: inputFormatters(testMask),
+      validator: validator(testMask),
       maxLines: maxLines,
       maxLengthEnforcement: maxLengthEnforcement,
       obscureText: useObscureText ? obscureText : false,
@@ -133,6 +141,49 @@ class TxffPadrao {
   //LIMPA O CAMPO
   void clear() {
     ctrlTextFormField.text = "";
+  }
+
+//****************************************************************************
+//!RETORNAM UM FORMATO E UM VALIDADOR BASEADO NUMA MASCARA ESCOLHIDA
+//****************************************************************************
+  List<TextInputFormatter> inputFormatters(String mask) {
+    List<TextInputFormatter> inputFormatters;
+    //MASCARA DE TEXTO
+    switch (mask.toLowerCase()) {
+      case "data":
+        return inputFormatters = [
+          FilteringTextInputFormatter.digitsOnly,
+          DataInputFormatter(),
+        ];
+      case "cash":
+        return inputFormatters = [
+          FilteringTextInputFormatter.allow(RegExp('[0-9,.]')),
+        ];
+      default:
+        return inputFormatters = [];
+    }
+  }
+
+  String? Function(String?)? validator(String mask) {
+    String? Function(String?)? validator;
+
+    //MASCARA DE TEXTO
+    switch (mask.toLowerCase()) {
+      case "nome":
+        return validator =
+            Validatorless.min(7, 'Esse campo não corresponde ao padrão');
+      case "obrigatorio":
+        return validator =
+            Validatorless.required('Esse campo não pode ser vazio');
+      case "data":
+        return validator = Validatorless.date('Data informada não é valida');
+      case "cash":
+        return validator =Validatorless.required('Esse campo não pode ser nulo');
+      case "email":
+        return validator =Validatorless.email('Esse campo não corresponde ao padrão');
+      default:
+        return validator =null;
+    }
   }
 
 //****************************************************************************
